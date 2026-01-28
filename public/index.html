@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - xdirex</title>
+  
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
+  <link rel="manifest" href="/assets/favicon_io/site.webmanifest">
+  
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-left">
+        <img src="/assets/logo.png" alt="xdirex" class="logo-icon" width="45" height="45">
+        <h1>xdirex</h1>
+      </div>
+      
+      <div class="header-right">
+        <span id="user-email" class="user-email"></span>
+        <div class="dropdown">
+          <button class="dropdown-toggle" id="user-menu-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+          </button>
+          <div class="dropdown-menu" id="user-menu" style="display: none;">
+            <a href="#" id="settings-btn">ตั้งค่า</a>
+            <a href="#" id="logout-btn">ออกจากระบบ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Main Content -->
+  <main class="app-main">
+    <div class="container">
+      <!-- Header with Add Button -->
+      <div class="main-header">
+        <h1>Main Links</h1>
+        <button id="add-main-link-btn" class="btn btn-primary" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          สร้าง Main Link
+        </button>
+      </div>
+      
+      <!-- Main Link Card -->
+      <div id="main-link-container">
+        <!-- Loading state -->
+        <div id="loading" class="loading">กำลังโหลด...</div>
+        
+        <!-- No main link yet -->
+        <div id="no-main-link" class="empty-state" style="display: none;">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <h2>ยังไม่มี Main Link</h2>
+          <p>สร้าง Main Link แรกของคุณเพื่อเริ่มต้นใช้งาน</p>
+          <button id="create-main-link-btn" class="btn btn-primary">สร้าง Main Link</button>
+        </div>
+        
+        <!-- Main Link Card -->
+        <div id="main-link-card" style="display: none;">
+          <!-- Card content will be rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="app-footer">
+    <a href="#" id="branding-link" target="_blank" rel="noopener noreferrer"></a>
+  </footer>
+  
+  <!-- Modal: Create Main Link -->
+  <div id="create-main-link-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>สร้าง Main Link</h2>
+        <button class="modal-close" data-modal="create-main-link-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="create-main-link-form">
+          <div class="form-group">
+            <label for="main-slug">Slug</label>
+            <input type="text" id="main-slug" name="slug" placeholder="my-campaign" required>
+            <small>URL: <span id="main-slug-preview"></span></small>
+          </div>
+          
+          <div class="form-group">
+            <label for="main-icon">Icon</label>
+            <div class="icon-selector">
+              <button type="button" class="icon-option active" data-icon="link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="zap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="target">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="6"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="star">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="heart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="gift">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                  <rect x="2" y="7" width="20" height="5"></rect>
+                  <line x1="12" y1="22" x2="12" y2="7"></line>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="shopping-cart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </button>
+              <button type="button" class="icon-option" data-icon="trophy">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+              </button>
+            </div>
+            <input type="hidden" id="main-icon" name="icon" value="link">
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="create-main-link-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">สร้าง</button>
+          </div>
+          
+          <div style="text-align: center; margin-top: 12px;">
+            <small id="remaining-links-info" style="color: var(--gray-500); font-size: 12px;"></small>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Add Destination -->
+  <div id="add-destination-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>เพิ่ม Destination Link</h2>
+        <button class="modal-close" data-modal="add-destination-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-destination-form">
+          <div class="form-group">
+            <label for="dest-slug">Slug</label>
+            <input type="text" id="dest-slug" name="slug" placeholder="campaign-a" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="dest-url">URL ปลายทาง</label>
+            <input type="url" id="dest-url" name="url" placeholder="https://example.com" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="add-destination-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">เพิ่ม</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Conversion Settings -->
+  <div id="conversion-settings-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ตั้งค่า Conversion</h2>
+        <button class="modal-close" data-modal="conversion-settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="conversion-settings-form">
+          <div class="form-group">
+            <label for="conv-key">Key Name</label>
+            <input type="text" id="conv-key" name="key_name" placeholder="status" required>
+            <small>ชื่อ key ใน JSON payload ที่จะส่งมา</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="conv-value">Success Value</label>
+            <input type="text" id="conv-value" name="success_value" placeholder="success" required>
+            <small>ค่าที่ต้องการให้ตรงกับ key เพื่อนับเป็น conversion</small>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="conversion-settings-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">บันทึก</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Settings (User Slug) -->
+  <div id="settings-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ตั้งค่าบัญชี</h2>
+        <button class="modal-close" data-modal="settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="settings-form">
+          <div class="form-group">
+            <label for="user-slug">User Slug</label>
+            <input type="text" id="user-slug" name="new_slug" placeholder="my-username" required minlength="3">
+            <small>ใช้ใน URL: https://xdirex.pages.dev/<strong id="slug-preview-settings"></strong></small>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="settings-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">บันทึก</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Icon Picker -->
+  <div id="icon-picker-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>แก้ไข Main Link</h2>
+        <button class="modal-close" data-modal="icon-picker-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-main-link-form">
+          <div class="form-group">
+            <label for="edit-main-slug">Slug</label>
+            <input type="text" id="edit-main-slug" name="slug" placeholder="my-campaign" required>
+            <small>URL: <span id="edit-slug-preview"></span></small>
+          </div>
+          
+          <div class="form-group">
+            <label>เลือกไอคอน</label>
+            <div class="icon-selector" id="icon-picker-grid"></div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="icon-picker-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">บันทึก</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Delete Confirmation -->
+  <div id="delete-main-link-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ยืนยันการลบ Main Link</h2>
+        <button class="modal-close" data-modal="delete-main-link-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="warning-text">⚠️ การลบ Main Link จะลบ Destination Links และ Conversion Settings ทั้งหมดด้วย</p>
+        <form id="delete-main-link-form">
+          <div class="form-group">
+            <label for="confirm-slug">พิมพ์ User Slug ของคุณเพื่อยืนยัน:</label>
+            <input type="text" id="confirm-slug" name="confirm_slug" placeholder="" required>
+            <small>User Slug ของคุณคือ: <strong id="current-user-slug"></strong></small>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="delete-main-link-modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-danger">ลบ Main Link</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Limit Reached -->
+  <div id="limit-reached-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ถึงขีดจำกัดแล้ว / Limit Reached</h2>
+        <button class="modal-close" data-modal="limit-reached-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; padding: 20px 0;">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--warning, #f59e0b); margin-bottom: 16px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <p style="margin-bottom: 8px; font-weight: 500;">คุณสร้างลิ้งก์ครบจำนวนที่จำกัดแล้ว</p>
+          <p style="margin-bottom: 8px; font-weight: 500;">กรุณาติดต่อผู้ให้บริการหากต้องการสร้างเพิ่ม</p>
+          <p style="color: var(--gray-500); font-size: 14px; margin-top: 16px;">You have reached the maximum number of links.</p>
+          <p style="color: var(--gray-500); font-size: 14px;">Please contact the service provider if you need to create more.</p>
+        </div>
+        
+        <div class="form-actions" style="justify-content: center; gap: 12px;">
+          <button type="button" class="btn btn-secondary" data-modal="limit-reached-modal">ปิด / Close</button>
+          <a id="contact-provider-btn" href="#" target="_blank" class="btn btn-primary">ติดต่อ / Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/assets/auth.js"></script>
+  <script src="/assets/api.js"></script>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

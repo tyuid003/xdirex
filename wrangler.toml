@@ -1,0 +1,38 @@
+name = "xdirex"
+compatibility_date = "2024-01-01"
+main = "worker/index.js"
+
+# Cloudflare Pages ผูกกับ Worker นี้
+# Deploy Worker: wrangler deploy
+# Deploy Pages: wrangler pages deploy public --project-name=xdirex
+
+# Environment Variables (ตั้งค่าผ่าน Cloudflare Dashboard หรือ wrangler secret)
+[vars]
+ENVIRONMENT = "production"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "REDIRECT_KV"
+id = "3ba1825cd9574423b301df48851a5548"
+preview_id = "d9c5205b12c443dcb34e7121a29aca31"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "xdirex_db"
+database_id = "e019f123-42a1-48f6-aab5-a904051eada5"
+
+# Secrets (ตั้งค่าด้วย: wrangler secret put SECRET_NAME)
+# - GOOGLE_CLIENT_ID
+# - GOOGLE_CLIENT_SECRET
+# - JWT_SECRET
+# - ALLOWED_DOMAIN (optional, e.g., "yourdomain.com" for domain restriction)
+
+# Routes (ถ้า deploy บน custom domain)
+# [[routes]]
+# pattern = "yourdomain.com/*"
+# zone_name = "yourdomain.com"
+
+# Workers configuration
+[build]
+command = ""
