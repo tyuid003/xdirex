@@ -533,4 +533,3 @@ async function getBranding(env) {
     });
   }
 }
-
