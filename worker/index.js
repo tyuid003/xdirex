@@ -362,14 +362,7 @@ async function createDestination(request, env, user, mainLinkId) {
       return errorResponse('Slug and URL are required', 400);
     }
     
-    // ตรวจสอบว่า slug ซ้ำหรือไม่
-    const duplicateCheck = await env.DB.prepare(`
-      SELECT id FROM destination_links WHERE slug = ?
-    `).bind(slug).first();
-    
-    if (duplicateCheck) {
-      return errorResponse('Slug already exists', 400);
-    }
+    // ไม่ตรวจสอบ slug ซ้ำเพราะ destination slug สามารถซ้ำได้
     
     // สร้าง destination
     const result = await env.DB.prepare(`
@@ -483,13 +476,13 @@ async function updateUserSlug(request, env, user) {
       return errorResponse('New slug must be at least 3 characters', 400);
     }
     
-    // ตรวจสอบว่า slug ซ้ำหรือไม่
-    const duplicate = await env.DB.prepare(`
-      SELECT id FROM users WHERE user_slug = ? AND id != ?
-    `).bind(new_slug, user.userId).first();
+    // ตรวจสอบว่า slug ซ้ำกับคนอื่นหรือไม่ (ไม่รวมตัวเอง)
+    const duplicate = await env.DB.prepare(
+      `SELECT id FROM users WHERE user_slug = ? AND id != ?`
+    ).bind(new_slug, user.userId).first();
     
     if (duplicate) {
-      return errorResponse('Slug already exists', 400);
+      return errorResponse('User slug already exists', 400);
     }
     
     const oldSlug = user.userSlug;
