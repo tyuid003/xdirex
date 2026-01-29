@@ -549,7 +549,7 @@ async function handleSaveUserSlug(e) {
   e.preventDefault();
   
   const formData = new FormData(e.target);
-  const newSlug = formData.get('user_slug');
+  const newSlug = formData.get('new_slug');
   
   if (newSlug === currentUser.userSlug) {
     closeModal('settings-modal');
