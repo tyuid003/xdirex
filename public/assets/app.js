@@ -556,14 +556,27 @@ async function handleSaveUserSlug(e) {
     return;
   }
   
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  
   try {
+    // แสดง loading spinner
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div>';
+    
     await updateUserSlug(newSlug);
     currentUser.userSlug = newSlug;
+    
+    // Reload main links เพื่ออัปเดต URL ทั้งหมด
+    await loadMainLink();
+    
     closeModal('settings-modal');
-    renderMainLink(currentMainLink);
   } catch (error) {
     console.error('Update user slug error:', error);
     alert(`เกิดข้อผิดพลาด: ${error.message}`);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
   }
 }
 
